@@ -15,8 +15,8 @@
    Light/dark · Klein blue · Archival
 ═══════════════════════════════ */
 :root {
-  --bg:         #DDE4EF;
-  --bg2:        #D0DAE9;
+  --bg:         #F8FAFC;
+  --bg2:        #EEF2F7;
   --surface:    rgba(255,255,255,0.5);
   --border:     rgba(20,20,20,0.08);
   --border-hi:  rgba(20,20,20,0.18);
@@ -56,7 +56,7 @@ html{font-size:14px;}
 body {
   min-height:100vh; color:var(--ink);
   font-family:var(--sans); font-weight:300;
-  background:var(--bg);
+  background:var(--bg) url("focal_background.jpg") center/cover fixed no-repeat;
   transition:background 0.4s,color 0.3s;
   overflow-x:hidden;
 }
@@ -80,7 +80,7 @@ input,textarea,select{font-family:inherit;}
   display:flex;align-items:center;justify-content:space-between;
   padding:0 40px;height:52px;
   border-bottom:0.5px solid var(--border-hi);
-  background:rgba(221,228,239,0.92);
+  background:rgba(248,250,252,0.92);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
 }
 .dark .topbar{background:rgba(10,10,10,0.88);}
@@ -153,7 +153,7 @@ input,textarea,select{font-family:inherit;}
 /* ── DETAIL VIEW ── */
 .detail-view{display:none;}
 .detail-view.active{display:flex;flex-direction:column;flex:1;}
-.detail-topbar{display:flex;align-items:center;gap:14px;padding:0 40px;height:48px;flex-shrink:0;border-bottom:0.5px solid var(--border-hi);background:rgba(221,228,239,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
+.detail-topbar{display:flex;align-items:center;gap:14px;padding:0 40px;height:48px;flex-shrink:0;border-bottom:0.5px solid var(--border-hi);background:rgba(248,250,252,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);}
 .dark .detail-topbar{background:rgba(10,10,10,0.88);}
 .detail-back{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim);cursor:pointer;border:none;background:none;transition:color var(--transition);padding:0;}
 .detail-back:hover{color:var(--ink);}
@@ -618,7 +618,7 @@ select.form-input{appearance:none;cursor:pointer;}
 
 /* ── FOOTER ── */
 .site-footer{margin-top:auto;height:200px;background:var(--bg2);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.site-footer::before{content:"";position:absolute;inset:0;background:rgba(221,228,239,0.42);}
+.site-footer::before{content:"";position:absolute;inset:0;background:rgba(248,250,252,0.42);}
 .dark .site-footer::before{background:rgba(10,10,10,0.6);}
 .footer-inner{position:relative;z-index:2;text-align:center;}
 .footer-wordmark{font-family:var(--display);font-size:64px;font-weight:900;letter-spacing:-3px;color:transparent;-webkit-text-stroke:1px rgba(14,14,14,0.55);filter:url(#grain);line-height:1;}
@@ -2263,8 +2263,8 @@ async function sendAIMsg(){
   msgEl.appendChild(typingEl);msgEl.scrollTop=msgEl.scrollHeight;
   try{
     const sys=buildAIChatSystem(session);
-    const apiMsgs=session.messages.slice(-12).map(m=>({role:m.role,content:m.content}));
-    const reply=await callAI(sys+'\n\n用户问题：'+text,null,null,apiMsgs);
+    const history=session.messages.slice(-12).map(m=>({role:m.role,content:m.content}));
+    const reply=await callAIChat(sys,text,history);
     typingEl.remove();
     session.messages.push({role:'assistant',content:reply,time:new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})});
     saveAISessions(sessions);renderAIMessages(session.messages);renderAIChatSidebar();
@@ -2401,6 +2401,50 @@ function updateAIBadge(){
 }
 
 // Core callAI
+// callAIChat: correctly passes system prompt + conversation history to each provider
+async function callAIChat(systemPrompt, userMessage, history=[]){
+  const cfg=load('ai_config',{});
+  if(!cfg.provider) throw new Error('请先配置 AI：点击右上角 ⚙ AI 按钮');
+
+  // Build message array: history already has role/content pairs, add latest user msg
+  const msgs=[...history,{role:'user',content:userMessage}];
+
+  if(cfg.provider==='local'){
+    // Ollama: prepend system as first message with role 'system'
+    const ollamaMsgs=[{role:'system',content:systemPrompt},...msgs];
+    const res=await fetch(`${cfg.localUrl}/api/chat`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:cfg.localModel,messages:ollamaMsgs,stream:false})});
+    if(!res.ok) throw new Error(`Ollama error ${res.status}`);
+    const data=await res.json();return data.message?.content||data.response||'';
+  }
+  if(cfg.provider==='anthropic'){
+    // Anthropic: system is a top-level field, separate from messages
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':cfg.key,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:cfg.model||'claude-sonnet-4-20250514',max_tokens:1500,system:systemPrompt,messages:msgs})});
+    if(!res.ok){const e=await res.json();throw new Error(e.error?.message||`API error ${res.status}`);}
+    const data=await res.json();return data.content?.map(c=>c.text||'').join('')||'';
+  }
+  if(cfg.provider==='gemini'){
+    // Gemini: inject system as first user turn with immediate model ack
+    const geminiMsgs=[
+      {role:'user',parts:[{text:systemPrompt}]},
+      {role:'model',parts:[{text:'Understood. I will follow these instructions.'}]},
+      ...msgs.map(m=>({role:m.role==='assistant'?'model':'user',parts:[{text:m.content}]}))
+    ];
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${cfg.model}:generateContent?key=${cfg.key}`,
+      {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:geminiMsgs})});
+    if(!res.ok){const e=await res.json();throw new Error(e.error?.message||`API error ${res.status}`);}
+    const data=await res.json();return data.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('')||'';
+  }
+  // OpenAI-compatible (openai/deepseek/kimi/qwen/custom): system role message
+  const endpoints={openai:'https://api.openai.com/v1/chat/completions',deepseek:'https://api.deepseek.com/v1/chat/completions',kimi:'https://api.moonshot.cn/v1/chat/completions',qwen:'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',custom:cfg.customUrl||''};
+  const endpoint=endpoints[cfg.provider];if(!endpoint)throw new Error('未知 provider');
+  const openaiMsgs=[{role:'system',content:systemPrompt},...msgs];
+  const res=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${cfg.key}`},body:JSON.stringify({model:cfg.model,messages:openaiMsgs,max_tokens:1500})});
+  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||`API error ${res.status}`);}
+  const data=await res.json();return data.choices?.[0]?.message?.content||'';
+}
+
 async function callAI(prompt,imageBase64=null,imageType=null,historyMessages=null){
   const cfg=load('ai_config',{});
   if(!cfg.provider) throw new Error('请先配置 AI：点击右上角 ⚙ AI 按钮');
