@@ -642,7 +642,49 @@ select.form-input{appearance:none;cursor:pointer;}
 .prompt-use-btn{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border:0.5px solid var(--border-hi);background:transparent;color:var(--ink-dim);cursor:pointer;border-radius:1px;transition:all var(--transition);}
 .prompt-use-btn:hover{border-color:var(--klein);color:var(--klein);}
 .prompt-expanded .prompt-card-text{-webkit-line-clamp:unset;}
-/* ── RESPONSIVE ── */
+/* ── TASKS + PLAN MERGED ── */
+.tasks-plan-layout{display:flex;flex-direction:column;}
+.tasks-left-col{border-bottom:0.5px solid var(--border-hi);padding:24px 20px;}
+.tasks-right-col{padding:24px 20px;}
+.tasks-view-toggle{display:none;gap:1px;background:var(--border-hi);margin-bottom:20px;}
+.tasks-view-btn{flex:1;font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;padding:9px;background:transparent;border:none;color:var(--ink-dim);cursor:pointer;transition:all var(--transition);}
+.tasks-view-btn.active{background:var(--ink);color:var(--bg);}
+.tasks-col-title{font-family:var(--mono);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:16px;}
+
+/* ── FC SUB-TABS ── */
+.fc-subtab-bar{display:flex;gap:1px;background:var(--border-hi);margin-bottom:24px;}
+.fc-subtab{flex:1;font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;padding:9px;background:transparent;border:none;color:var(--ink-dim);cursor:pointer;transition:all var(--transition);}
+.fc-subtab.active{background:var(--ink);color:var(--bg);}
+
+/* ── AI MEGA-TAB ── */
+.ai-internal-nav{display:flex;gap:1px;background:var(--border-hi);margin-bottom:0;}
+.ai-nav-btn{flex:1;font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;padding:10px 6px;background:transparent;border:none;color:var(--ink-dim);cursor:pointer;transition:all var(--transition);white-space:nowrap;}
+.ai-nav-btn.active{background:var(--ink);color:var(--bg);}
+.ai-sub-panel{display:none;}
+.ai-sub-panel.active{display:block;}
+
+/* ── EDIT SUBJECT MODAL ── */
+.edit-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+.edit-modal-overlay.open{opacity:1;pointer-events:all;}
+.edit-modal{background:var(--bg);border:0.5px solid var(--border-hi);padding:32px;width:min(560px,95vw);max-height:90vh;overflow-y:auto;position:relative;}
+.edit-modal-title{font-family:var(--serif);font-size:22px;font-weight:300;margin-bottom:24px;}
+.edit-section-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--border);}
+.edit-section-name{flex:1;font-family:var(--sans);font-size:13px;font-weight:300;}
+.edit-section-priority{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;padding:2px 8px;border-radius:1px;text-transform:uppercase;}
+.edit-section-priority.high{border:0.5px solid var(--klein);color:var(--klein);}
+.edit-section-priority.mid{border:0.5px solid var(--ink-dim);color:var(--ink-dim);}
+.edit-section-priority.low{border:0.5px solid var(--border-hi);color:var(--ink-ghost);}
+
+/* ── SESSION DELETE ── */
+.ai-session-del{font-family:var(--mono);font-size:10px;color:var(--ink-ghost);background:transparent;border:none;cursor:pointer;padding:2px 5px;margin-left:auto;flex-shrink:0;transition:color var(--transition);}
+.ai-session-del:hover{color:var(--red);}
+.ai-session-item{display:flex;align-items:flex-start;gap:4px;padding:10px 14px;cursor:pointer;border-bottom:0.5px solid var(--border);transition:background var(--transition);}
+.ai-session-item:hover{background:var(--bg2);}
+.ai-session-item.active{background:var(--bg2);}
+.ai-session-content{flex:1;min-width:0;}
+.ai-session-title{font-family:var(--sans);font-size:12px;font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ai-session-meta{font-family:var(--mono);font-size:8px;color:var(--ink-dim);margin-top:2px;}
+
 @media(max-width:680px){
   body{padding-bottom:68px;}
   .topbar{padding:0 16px;}
@@ -787,86 +829,67 @@ select.form-input{appearance:none;cursor:pointer;}
       <button class="detail-back" onclick="showHome()">← Back</button>
       <div class="detail-subject-name" id="detail-name">—</div>
       <div class="days-badge" id="detail-days">— days</div>
+      <button class="topbar-btn" style="margin-left:auto" onclick="openEditSubject()">⚙ 设置</button>
     </div>
     <div class="module-tabs" id="module-tabs">
       <button class="module-tab active" data-tab="tasks"     onclick="switchTab('tasks',this)">📋 Tasks</button>
-      <button class="module-tab"        data-tab="planner"   onclick="switchTab('planner',this)">📅 Planner</button>
       <button class="module-tab"        data-tab="pomodoro"  onclick="switchTab('pomodoro',this)">🍅 Pomodoro</button>
       <button class="module-tab"        data-tab="notes"     onclick="switchTab('notes',this)">📝 Notes</button>
-      <button class="module-tab"        data-tab="exam"      onclick="switchTab('exam',this)">🎯 Exam Intel</button>
       <button class="module-tab"        data-tab="flash"     onclick="switchTab('flash',this)">⭐ Flash Cards</button>
-      <button class="module-tab"        data-tab="errors"    onclick="switchTab('errors',this)">✕ Error Log</button>
+      <button class="module-tab"        data-tab="ai"        onclick="switchTab('ai',this)">🤖 AI</button>
       <button class="module-tab"        data-tab="resources" onclick="switchTab('resources',this)">📚 Resources</button>
-      <button class="module-tab"        data-tab="aichat"    onclick="switchTab('aichat',this)">💬 AI Chat</button>
-      <button class="module-tab"        data-tab="prompts"   onclick="switchTab('prompts',this)">⚡ Prompt 库</button>
     </div>
 
-    <!-- TASKS (original v3) -->
+    <!-- TASKS + PLAN (merged, responsive) -->
     <div class="module-panel active" id="panel-tasks">
-      <div class="panel-inner">
-        <div class="tasks-add-row">
-          <input type="text" id="task-input" placeholder="New task…" onkeydown="if(event.key==='Enter')addTask()"/>
-          <input type="date" id="task-date"/>
-          <select id="task-priority">
-            <option value="normal">Normal</option>
-            <option value="critical">Critical</option>
-            <option value="easy">Easy</option>
-          </select>
-          <button class="add-btn" onclick="addTask()">Add →</button>
-        </div>
-        <div id="tasks-container"></div>
+      <!-- Mobile toggle -->
+      <div class="tasks-view-toggle" id="tasks-view-toggle">
+        <button class="tasks-view-btn active" id="tvbtn-list" onclick="switchTasksView('list')">📋 任务列表</button>
+        <button class="tasks-view-btn" id="tvbtn-cal" onclick="switchTasksView('cal')">📅 日历计划</button>
       </div>
-    </div>
-
-    <!-- PLANNER (v4 new) -->
-    <div class="module-panel" id="panel-planner">
-      <div class="panel-inner">
-        <!-- Exam timeline -->
-        <div class="exam-timeline-wrap">
-          <div class="exam-tl-header">
-            <div class="exam-tl-title">Exam Timeline · 考试时间轴</div>
-            <button class="sec-btn" onclick="switchTab('exam',document.querySelector('[data-tab=exam]'))">Manage →</button>
+      <div class="tasks-plan-layout">
+        <!-- LEFT: Task list -->
+        <div class="tasks-left-col" id="tasks-list-col">
+          <div class="tasks-col-title">Tasks · 任务</div>
+          <div class="tasks-add-row">
+            <input type="text" id="task-input" placeholder="New task…" onkeydown="if(event.key==='Enter')addTask()"/>
+            <input type="date" id="task-date"/>
+            <select id="task-priority">
+              <option value="normal">Normal</option>
+              <option value="critical">Critical</option>
+              <option value="easy">Easy</option>
+            </select>
+            <button class="add-btn" onclick="addTask()">Add →</button>
           </div>
-          <div id="planner-exam-tl"></div>
+          <div id="tasks-container"></div>
         </div>
-
-        <!-- AI plan section -->
-        <div class="ai-plan-section">
-          <div class="ai-plan-header">
-            <div class="ai-plan-title">AI 复习计划生成</div>
-            <div class="ai-plan-status-row">
-              <select class="form-input" style="width:auto;padding:4px 10px;font-size:9px" id="plan-exam-sel">
-                <option value="">选择考试…</option>
-              </select>
-              <input type="number" id="plan-hours" value="3" min="1" max="12" style="width:52px;padding:4px 8px;font-family:var(--mono);font-size:9px;background:transparent;border:0.5px solid var(--border-hi);color:var(--ink);outline:none;" title="每日学时">
-              <select class="form-input" style="width:auto;padding:4px 10px;font-size:9px" id="plan-strategy">
-                <option value="balanced">均衡</option>
-                <option value="front">前冲</option>
-                <option value="back">后冲</option>
-              </select>
-              <button class="sec-btn" id="plan-gen-btn" onclick="generateAIPlan()">AI 生成 →</button>
-              <button class="sec-btn" id="plan-inject-btn" style="display:none;color:var(--klein);border-color:var(--klein)" onclick="injectPlanToTasks()">注入任务 →</button>
+        <!-- RIGHT: Calendar + Plan columns -->
+        <div class="tasks-right-col" id="tasks-cal-col">
+          <div class="tasks-col-title">Plan · 计划</div>
+          <!-- Exam timeline -->
+          <div class="exam-timeline-wrap" style="margin-bottom:20px">
+            <div class="exam-tl-header">
+              <div class="exam-tl-title">Exam Timeline · 考试时间轴</div>
             </div>
+            <div id="planner-exam-tl"></div>
           </div>
-          <div class="ai-plan-result" id="plan-result">选择一个考试，AI 将根据剩余天数自动生成分阶段复习计划…</div>
-        </div>
-
-        <!-- Mini calendar + columns -->
-        <div style="display:grid;grid-template-columns:200px 1fr;gap:20px">
-          <div>
-            <div class="mini-cal" id="mini-cal"></div>
-            <div class="cal-filter-sec">
-              <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">筛选</div>
-              <div id="cal-filter-chips"></div>
+          <!-- Mini calendar + columns -->
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:20px">
+            <div>
+              <div class="mini-cal" id="mini-cal"></div>
+              <div class="cal-filter-sec">
+                <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">筛选</div>
+                <div id="cal-filter-chips"></div>
+              </div>
             </div>
-          </div>
-          <div>
-            <div class="planner-tabs">
-              <button class="planner-tab active" id="ptab-month" onclick="switchPlanView('month')">月计划</button>
-              <button class="planner-tab" id="ptab-week" onclick="switchPlanView('week')">周计划</button>
-              <button class="planner-tab" id="ptab-day" onclick="switchPlanView('day')">今日</button>
+            <div>
+              <div class="planner-tabs">
+                <button class="planner-tab active" id="ptab-month" onclick="switchPlanView('month')">月计划</button>
+                <button class="planner-tab" id="ptab-week" onclick="switchPlanView('week')">周计划</button>
+                <button class="planner-tab" id="ptab-day" onclick="switchPlanView('day')">今日</button>
+              </div>
+              <div class="plan-cols" id="plan-cols"></div>
             </div>
-            <div class="plan-cols" id="plan-cols"></div>
           </div>
         </div>
       </div>
@@ -977,101 +1000,211 @@ select.form-input{appearance:none;cursor:pointer;}
       </div>
     </div>
 
-    <!-- EXAM INTEL (v3 original) -->
-    <div class="module-panel" id="panel-exam">
-      <div class="panel-inner">
-        <div class="exam-header" id="exam-header"></div>
-        <div class="sec" style="margin-top:0"><div class="sec-id">§A</div><div class="sec-line"></div><div class="sec-label">Key Sections</div><div class="sec-line"></div><button class="sec-btn" onclick="addExamSection()">+ Add Section</button></div>
-        <div id="exam-sections"></div>
-        <div class="sec"><div class="sec-id">§C</div><div class="sec-line"></div><div class="sec-label">Past Papers · 真题批改</div><div class="sec-line"></div></div>
-        <div class="past-paper-upload-zone" id="pp-upload-zone">
-          <input type="file" id="pp-file-input" accept=".pdf,.png,.jpg,.jpeg" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="handlePastPaper(event)" onclick="event.stopPropagation()"/>
-          <div class="upload-zone-icon">📄</div>
-          <div class="upload-zone-title">Upload Past Paper · 上传真题</div>
-          <div class="upload-zone-sub">PDF or Image</div>
-        </div>
-        <div id="pp-preview" style="display:none"></div>
-        <div class="past-paper-actions" id="pp-actions" style="display:none">
-          <button class="past-paper-btn primary" id="pp-grade-btn" onclick="runPaperGrading()">AI 批改 →</button>
-          <button class="past-paper-btn" id="pp-gen-btn" onclick="runSimilarQuestions()">出同类题 →</button>
-          <button class="past-paper-btn" onclick="clearPastPaper()">Clear</button>
-        </div>
-        <div id="pp-results"></div>
-        <div class="sec" style="margin-top:28px"><div class="sec-id">§D</div><div class="sec-line"></div><div class="sec-label">AI Prediction · 出题预测</div><div class="sec-line"></div></div>
-        <div class="ai-predict">
-          <div class="ai-predict-header">
-            <div class="ai-predict-title">AI Exam Prediction</div>
-            <div style="display:flex;gap:10px;align-items:center">
-              <div class="ai-predict-badge">AI</div>
-              <button class="ai-predict-btn" id="ai-btn" onclick="runAiPrediction()">Generate →</button>
+    <!-- AI MEGA-PANEL (Chat + 真题批改 + 出题预测 + 模板库) -->
+    <div class="module-panel" id="panel-ai">
+      <!-- Internal nav -->
+      <div class="ai-internal-nav">
+        <button class="ai-nav-btn active" id="ainav-chat" onclick="switchAINav('chat',this)">💬 对话</button>
+        <button class="ai-nav-btn" id="ainav-paper" onclick="switchAINav('paper',this)">📄 真题批改</button>
+        <button class="ai-nav-btn" id="ainav-predict" onclick="switchAINav('predict',this)">🎯 出题预测</button>
+        <button class="ai-nav-btn" id="ainav-prompts" onclick="switchAINav('prompts',this)">⚡ 模板库</button>
+      </div>
+
+      <!-- CHAT sub-panel -->
+      <div class="ai-sub-panel active" id="ai-sub-chat">
+        <div class="ai-chat-layout" style="min-height:calc(100vh - 240px)">
+          <div class="ai-chat-sidebar">
+            <div class="ai-chat-sidebar-hdr">
+              <div class="ai-chat-sidebar-title">历史对话</div>
+              <button class="sec-btn" style="padding:3px 8px;font-size:8px" onclick="newAISession()">+</button>
+            </div>
+            <div id="ai-session-list"></div>
+          </div>
+          <div class="ai-chat-main">
+            <div class="ai-chat-ctx-bar">
+              <div class="ai-ctx-chip active" data-ctx="general" onclick="setAICtx('general',this)">自由问答</div>
+              <div class="ai-ctx-chip" data-ctx="subject" onclick="setAICtx('subject',this)">科目知识库</div>
+              <div class="ai-ctx-chip" data-ctx="plan" onclick="setAICtx('plan',this)">学习规划</div>
+              <div style="margin-left:auto;font-family:var(--mono);font-size:8px;color:var(--ink-dim)" id="ai-provider-lbl">—</div>
+            </div>
+            <div class="ai-messages" id="ai-messages">
+              <div style="text-align:center;padding:40px 20px;font-family:var(--mono);font-size:9px;color:var(--ink-dim)">选择历史对话或点击 + 开始新对话</div>
+            </div>
+            <div class="ai-input-area">
+              <div class="ai-quick-row" id="ai-quick-row"></div>
+              <div class="ai-input-row">
+                <textarea class="ai-input" id="ai-input" rows="1" placeholder="输入问题… Enter 发送，Shift+Enter 换行" onkeydown="aiKeydown(event)" oninput="autoResizeAI(this)"></textarea>
+                <button class="ai-send-btn" id="ai-send-btn" onclick="sendAIMsg()">发送 ↑</button>
+              </div>
+              <div class="ai-disclaimer">AI 回答仅供参考，重要内容请自行核实</div>
             </div>
           </div>
-          <input class="ai-syllabus-input" id="ai-syllabus" placeholder="Paste syllabus or key topics… 粘贴考纲或重点章节"/>
-          <div class="ai-output" id="ai-output"><span class="ai-output-placeholder">Click Generate to predict likely exam questions.</span></div>
+        </div>
+      </div>
+
+      <!-- PAST PAPER sub-panel -->
+      <div class="ai-sub-panel" id="ai-sub-paper">
+        <div class="panel-inner">
+          <div class="sec" style="margin-top:0"><div class="sec-id">§01</div><div class="sec-line"></div><div class="sec-label">Past Papers · 真题批改</div><div class="sec-line"></div></div>
+          <div class="past-paper-upload-zone" id="pp-upload-zone">
+            <input type="file" id="pp-file-input" accept=".pdf,.png,.jpg,.jpeg" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="handlePastPaper(event)" onclick="event.stopPropagation()"/>
+            <div class="upload-zone-icon">📄</div>
+            <div class="upload-zone-title">Upload Past Paper · 上传真题</div>
+            <div class="upload-zone-sub">PDF or Image</div>
+          </div>
+          <div id="pp-preview" style="display:none"></div>
+          <div class="past-paper-actions" id="pp-actions" style="display:none">
+            <button class="past-paper-btn primary" id="pp-grade-btn" onclick="runPaperGrading()">AI 批改 →</button>
+            <button class="past-paper-btn" id="pp-gen-btn" onclick="runSimilarQuestions()">出同类题 →</button>
+            <button class="past-paper-btn" onclick="clearPastPaper()">Clear</button>
+          </div>
+          <div id="pp-results"></div>
+        </div>
+      </div>
+
+      <!-- PREDICT sub-panel -->
+      <div class="ai-sub-panel" id="ai-sub-predict">
+        <div class="panel-inner">
+          <div class="sec" style="margin-top:0"><div class="sec-id">§01</div><div class="sec-line"></div><div class="sec-label">AI Prediction · 出题预测</div><div class="sec-line"></div></div>
+          <div class="ai-predict">
+            <div class="ai-predict-header">
+              <div class="ai-predict-title">AI Exam Prediction</div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <div class="ai-predict-badge">AI</div>
+                <button class="ai-predict-btn" id="ai-btn" onclick="runAiPrediction()">Generate →</button>
+              </div>
+            </div>
+            <input class="ai-syllabus-input" id="ai-syllabus" placeholder="Paste syllabus or key topics… 粘贴考纲或重点章节"/>
+            <div class="ai-output" id="ai-output"><span class="ai-output-placeholder">Click Generate to predict likely exam questions.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROMPTS sub-panel -->
+      <div class="ai-sub-panel" id="ai-sub-prompts">
+        <div class="panel-inner">
+          <!-- Mr. Ranedeer Tutor System -->
+          <div class="sec" style="margin-top:0"><div class="sec-id">§01</div><div class="sec-line"></div><div class="sec-label">Mr. Ranedeer · 深度家教系统</div><div class="sec-line"></div></div>
+          <div style="border:0.5px solid var(--border-hi);margin-bottom:28px">
+            <div style="padding:16px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:20px">
+              <div>
+                <div style="font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:6px">Mr. Ranedeer AI Tutor</div>
+                <div style="font-family:var(--sans);font-size:12px;font-weight:300;color:var(--ink-mid);line-height:1.6;max-width:500px">高度可定制的家教系统 prompt。设定深度档位、辅导风格、语言，直接注入对话作为本次的主控系统。</div>
+              </div>
+              <a href="https://github.com/JushBJJ/Mr.-Ranedeer-AI-Tutor" target="_blank" style="font-family:var(--mono);font-size:8px;letter-spacing:0.1em;color:var(--klein);text-decoration:none;white-space:nowrap;padding:4px 10px;border:0.5px solid var(--klein);border-radius:var(--radius)">GitHub ↗</a>
+            </div>
+            <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;border-bottom:0.5px solid var(--border)">
+              <div>
+                <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">深度档位</div>
+                <select id="ranedeer-depth" class="form-input" style="font-size:10px;padding:6px 10px">
+                  <option value="1">1 — 小学水平</option><option value="2">2 — 初中水平</option><option value="3">3 — 高中水平</option>
+                  <option value="4">4 — 本科水平</option><option value="5" selected>5 — 研究生水平</option>
+                  <option value="6">6 — 博士水平</option><option value="7">7 — 博后/专家</option><option value="8">8 — 领域最前沿</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">辅导风格</div>
+                <select id="ranedeer-style" class="form-input" style="font-size:10px;padding:6px 10px">
+                  <option value="Socratic">苏格拉底式追问</option><option value="Feynman" selected>费曼简洁解释法</option>
+                  <option value="Active">主动学习引导</option><option value="Spaced">间隔重复强化</option>
+                  <option value="Visual">视觉化/类比优先</option><option value="Debate">辩证批判思维</option>
+                </select>
+              </div>
+              <div>
+                <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">回答语言</div>
+                <select id="ranedeer-lang" class="form-input" style="font-size:10px;padding:6px 10px">
+                  <option value="Chinese" selected>中文</option><option value="English">英文</option>
+                  <option value="Bilingual">中英双语</option>
+                </select>
+              </div>
+            </div>
+            <div style="padding:12px 20px;border-bottom:0.5px solid var(--border)">
+              <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">学习目标（可选）</div>
+              <input id="ranedeer-topic" class="form-input" placeholder="例：帮我掌握线性代数的特征值/向量，备战期末考试" style="font-size:11px">
+            </div>
+            <div style="padding:12px 20px;background:var(--bg2);font-family:var(--mono);font-size:9px;color:var(--ink-dim);line-height:1.7;max-height:120px;overflow-y:auto" id="ranedeer-preview"></div>
+            <div style="padding:12px 20px;display:flex;gap:8px">
+              <button class="sec-btn" onclick="previewRanedeer()">预览 Prompt</button>
+              <button class="sec-btn" style="color:var(--klein);border-color:var(--klein)" onclick="sendRanedeerToChat()">注入 AI Chat →</button>
+            </div>
+          </div>
+          <!-- Awesome ChatGPT Prompts Library -->
+          <div class="sec"><div class="sec-id">§02</div><div class="sec-line"></div><div class="sec-label">Awesome Prompts · 精选库</div><div class="sec-line"></div>
+            <input id="prompt-search" style="font-family:var(--mono);font-size:9px;padding:5px 12px;background:transparent;border:0.5px solid var(--border-hi);color:var(--ink);outline:none;border-radius:var(--radius);width:180px" placeholder="搜索 prompt…" oninput="filterPromptLib(this.value)">
+          </div>
+          <div id="prompt-cat-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px"></div>
+          <div id="prompt-lib-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border-hi)"></div>
         </div>
       </div>
     </div>
 
-    <!-- FLASH CARDS (v3 original + v4 rate buttons) -->
+    <!-- FLASH CARDS + ERROR LOG (merged) -->
     <div class="module-panel" id="panel-flash">
       <div class="panel-inner">
-        <div class="flashcards-bar">
-          <div class="flashcards-count" id="fc-count">0 cards</div>
-          <div style="display:flex;gap:10px">
-            <button class="sec-btn" onclick="shuffleCards()">Shuffle</button>
-            <button class="sec-btn" onclick="resetCards()">Reset</button>
-          </div>
+        <!-- Sub-tab toggle -->
+        <div class="fc-subtab-bar">
+          <button class="fc-subtab active" id="fctab-concept" onclick="switchFCTab('concept',this)">知识点 · Concepts</button>
+          <button class="fc-subtab" id="fctab-error" onclick="switchFCTab('error',this)">错题 · Errors</button>
         </div>
-        <div class="flashcard-wrap" onclick="flipCard()" id="fc-wrap">
-          <div class="flashcard" id="flashcard">
-            <div class="flashcard-face flashcard-front">
-              <div class="fc-label">CONCEPT · 概念</div>
-              <div class="fc-content" id="fc-front-content">Add your first flash card below.</div>
-              <div class="fc-hint">Click to flip →</div>
-            </div>
-            <div class="flashcard-face flashcard-back">
-              <div class="fc-label">DEFINITION · 解释</div>
-              <div class="fc-content" id="fc-back-content">—</div>
-              <div class="fc-hint">← Click to flip back</div>
-            </div>
-          </div>
-        </div>
-        <div class="fc-nav">
-          <button class="fc-nav-btn" onclick="prevCard()">← Prev</button>
-          <div class="fc-progress" id="fc-progress">0 / 0</div>
-          <button class="fc-nav-btn" onclick="nextCard()">Next →</button>
-        </div>
-        <div class="fc-rate-row">
-          <button class="sec-btn" style="border-color:var(--red);color:var(--red)" onclick="rateCard('hard')">难 ✗</button>
-          <button class="sec-btn" onclick="rateCard('ok')">一般</button>
-          <button class="sec-btn" style="border-color:var(--green);color:var(--green)" onclick="rateCard('easy')">掌握 ✓</button>
-        </div>
-        <div class="sec" style="margin-top:32px"><div class="sec-id">§A</div><div class="sec-line"></div><div class="sec-label">Add Card</div><div class="sec-line"></div></div>
-        <div class="fc-add">
-          <textarea id="fc-front-input" placeholder="Concept / 概念…"></textarea>
-          <textarea id="fc-back-input" placeholder="Definition / 解释…"></textarea>
-        </div>
-        <button class="add-btn" style="margin-top:1px;width:100%;padding:11px" onclick="addCard()">Add Card →</button>
-        <div class="sec" style="margin-top:32px"><div class="sec-id">§B</div><div class="sec-line"></div><div class="sec-label">All Cards</div><div class="sec-line"></div></div>
-        <div id="fc-list"></div>
-      </div>
-    </div>
 
-    <!-- ERROR LOG (v3 original) -->
-    <div class="module-panel" id="panel-errors">
-      <div class="panel-inner">
-        <div class="error-add">
-          <div class="error-add-title">Add Error · 新增错题</div>
-          <div class="error-add-full">
-            <textarea id="err-question" placeholder="题目内容 / Question…"></textarea>
+        <!-- CONCEPT sub-panel -->
+        <div class="fc-sub-panel" id="fc-panel-concept">
+          <div class="flashcards-bar">
+            <div class="flashcards-count" id="fc-count">0 cards</div>
+            <div style="display:flex;gap:10px">
+              <button class="sec-btn" onclick="shuffleCards()">Shuffle</button>
+              <button class="sec-btn" onclick="resetCards()">Reset</button>
+            </div>
           </div>
-          <div class="error-add-grid">
-            <textarea id="err-wrong" placeholder="错误原因 / Why wrong…"></textarea>
-            <textarea id="err-correct" placeholder="正确解法 / Correct solution…"></textarea>
+          <div class="flashcard-wrap" onclick="flipCard()" id="fc-wrap">
+            <div class="flashcard" id="flashcard">
+              <div class="flashcard-face flashcard-front">
+                <div class="fc-label">CONCEPT · 概念</div>
+                <div class="fc-content" id="fc-front-content">Add your first flash card below.</div>
+                <div class="fc-hint">Click to flip →</div>
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <div class="fc-label">DEFINITION · 解释</div>
+                <div class="fc-content" id="fc-back-content">—</div>
+                <div class="fc-hint">← Click to flip back</div>
+              </div>
+            </div>
           </div>
-          <button class="add-btn" style="margin-top:1px;padding:10px 20px" onclick="addError()">Add to Log →</button>
+          <div class="fc-nav">
+            <button class="fc-nav-btn" onclick="prevCard()">← Prev</button>
+            <div class="fc-progress" id="fc-progress">0 / 0</div>
+            <button class="fc-nav-btn" onclick="nextCard()">Next →</button>
+          </div>
+          <div class="fc-rate-row">
+            <button class="sec-btn" style="border-color:var(--red);color:var(--red)" onclick="rateCard('hard')">难 ✗</button>
+            <button class="sec-btn" onclick="rateCard('ok')">一般</button>
+            <button class="sec-btn" style="border-color:var(--green);color:var(--green)" onclick="rateCard('easy')">掌握 ✓</button>
+          </div>
+          <div class="sec" style="margin-top:32px"><div class="sec-id">§A</div><div class="sec-line"></div><div class="sec-label">Add Card</div><div class="sec-line"></div></div>
+          <div class="fc-add">
+            <textarea id="fc-front-input" placeholder="Concept / 概念…"></textarea>
+            <textarea id="fc-back-input" placeholder="Definition / 解释…"></textarea>
+          </div>
+          <button class="add-btn" style="margin-top:1px;width:100%;padding:11px" onclick="addCard()">Add Card →</button>
+          <div class="sec" style="margin-top:32px"><div class="sec-id">§B</div><div class="sec-line"></div><div class="sec-label">All Cards</div><div class="sec-line"></div></div>
+          <div id="fc-list"></div>
         </div>
-        <div id="error-list"></div>
+
+        <!-- ERROR sub-panel -->
+        <div class="fc-sub-panel" id="fc-panel-error" style="display:none">
+          <div class="error-add">
+            <div class="error-add-title">Add Error · 新增错题</div>
+            <div class="error-add-full">
+              <textarea id="err-question" placeholder="题目内容 / Question…"></textarea>
+            </div>
+            <div class="error-add-grid">
+              <textarea id="err-wrong" placeholder="错误原因 / Why wrong…"></textarea>
+              <textarea id="err-correct" placeholder="正确解法 / Correct solution…"></textarea>
+            </div>
+            <button class="add-btn" style="margin-top:1px;padding:10px 20px" onclick="addError()">Add to Log →</button>
+          </div>
+          <div id="error-list"></div>
+        </div>
       </div>
     </div>
 
@@ -1104,111 +1237,6 @@ select.form-input{appearance:none;cursor:pointer;}
           </div>
           <button class="add-btn" style="margin-top:1px;padding:10px 20px" onclick="addCustomResource()">Add Link →</button>
         </div>
-      </div>
-    </div>
-
-    <!-- AI CHAT (v4 new) -->
-    <div class="module-panel" id="panel-aichat">
-      <div class="ai-chat-layout" style="min-height:calc(100vh - 200px)">
-        <div class="ai-chat-sidebar">
-          <div class="ai-chat-sidebar-hdr">
-            <div class="ai-chat-sidebar-title">历史对话</div>
-            <button class="sec-btn" style="padding:3px 8px;font-size:8px" onclick="newAISession()">+</button>
-          </div>
-          <div id="ai-session-list"></div>
-        </div>
-        <div class="ai-chat-main">
-          <div class="ai-chat-ctx-bar">
-            <div class="ai-ctx-chip active" data-ctx="general" onclick="setAICtx('general',this)">自由问答</div>
-            <div class="ai-ctx-chip" data-ctx="subject" onclick="setAICtx('subject',this)">科目辅导</div>
-            <div class="ai-ctx-chip" data-ctx="notes" onclick="setAICtx('notes',this)">笔记问答</div>
-            <div class="ai-ctx-chip" data-ctx="plan" onclick="setAICtx('plan',this)">学习规划</div>
-            <div style="margin-left:auto;font-family:var(--mono);font-size:8px;color:var(--ink-dim)" id="ai-provider-lbl">—</div>
-          </div>
-          <div class="ai-messages" id="ai-messages">
-            <div style="text-align:center;padding:40px 20px;font-family:var(--mono);font-size:9px;color:var(--ink-dim)">选择历史对话或点击 + 开始新对话</div>
-          </div>
-          <div class="ai-input-area">
-            <div class="ai-quick-row" id="ai-quick-row"></div>
-            <div class="ai-input-row">
-              <textarea class="ai-input" id="ai-input" rows="1" placeholder="输入问题… Enter 发送，Shift+Enter 换行" onkeydown="aiKeydown(event)" oninput="autoResizeAI(this)"></textarea>
-              <button class="ai-send-btn" id="ai-send-btn" onclick="sendAIMsg()">发送 ↑</button>
-            </div>
-            <div class="ai-disclaimer">AI 回答仅供参考，重要内容请自行核实</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PROMPT LIBRARY (awesome-chatgpt-prompts + Mr. Ranedeer) -->
-    <div class="module-panel" id="panel-prompts">
-      <div class="panel-inner">
-
-        <!-- Mr. Ranedeer Tutor System -->
-        <div class="sec" style="margin-top:0"><div class="sec-id">§01</div><div class="sec-line"></div><div class="sec-label">Mr. Ranedeer · 深度家教系统</div><div class="sec-line"></div></div>
-        <div style="border:0.5px solid var(--border-hi);margin-bottom:28px">
-          <div style="padding:16px 20px;border-bottom:0.5px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:20px">
-            <div>
-              <div style="font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:6px">Mr. Ranedeer AI Tutor</div>
-              <div style="font-family:var(--sans);font-size:12px;font-weight:300;color:var(--ink-mid);line-height:1.6;max-width:500px">高度可定制的家教系统 prompt。设定深度档位（小学 → PhD）、辅导风格（苏格拉底/费曼/Gordon Ramsay）、语言，直接注入 AI Chat 作为本次对话的主控系统。</div>
-            </div>
-            <a href="https://github.com/JushBJJ/Mr.-Ranedeer-AI-Tutor" target="_blank" style="font-family:var(--mono);font-size:8px;letter-spacing:0.1em;color:var(--klein);text-decoration:none;white-space:nowrap;padding:4px 10px;border:0.5px solid var(--klein);border-radius:var(--radius)">GitHub ↗</a>
-          </div>
-          <div style="padding:16px 20px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;border-bottom:0.5px solid var(--border)">
-            <div>
-              <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">深度档位</div>
-              <select id="ranedeer-depth" class="form-input" style="font-size:10px;padding:6px 10px">
-                <option value="1">1 — 小学水平</option>
-                <option value="2">2 — 初中水平</option>
-                <option value="3">3 — 高中水平</option>
-                <option value="4">4 — 本科水平</option>
-                <option value="5" selected>5 — 研究生水平</option>
-                <option value="6">6 — 博士水平</option>
-                <option value="7">7 — 博后/专家</option>
-                <option value="8">8 — 领域最前沿</option>
-              </select>
-            </div>
-            <div>
-              <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">辅导风格</div>
-              <select id="ranedeer-style" class="form-input" style="font-size:10px;padding:6px 10px">
-                <option value="Socratic">苏格拉底式追问</option>
-                <option value="Feynman" selected>费曼简洁解释法</option>
-                <option value="Active">主动学习引导</option>
-                <option value="Spaced">间隔重复强化</option>
-                <option value="Visual">视觉化/类比优先</option>
-                <option value="Storytelling">叙事情境代入</option>
-                <option value="Debate">辩证批判思维</option>
-              </select>
-            </div>
-            <div>
-              <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">回答语言</div>
-              <select id="ranedeer-lang" class="form-input" style="font-size:10px;padding:6px 10px">
-                <option value="Chinese" selected>中文</option>
-                <option value="English">英文</option>
-                <option value="Bilingual">中英双语</option>
-                <option value="Japanese">日文</option>
-                <option value="Korean">韩文</option>
-              </select>
-            </div>
-          </div>
-          <div style="padding:12px 20px;border-bottom:0.5px solid var(--border)">
-            <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">学习目标（可选）</div>
-            <input id="ranedeer-topic" class="form-input" placeholder="例：帮我掌握线性代数的特征值/向量，备战期末考试" style="font-size:11px">
-          </div>
-          <div style="padding:12px 20px;background:var(--bg2);font-family:var(--mono);font-size:9px;color:var(--ink-dim);line-height:1.7;max-height:120px;overflow-y:auto" id="ranedeer-preview"></div>
-          <div style="padding:12px 20px;display:flex;gap:8px">
-            <button class="sec-btn" onclick="previewRanedeer()">预览 Prompt</button>
-            <button class="sec-btn" style="color:var(--klein);border-color:var(--klein)" onclick="sendRanedeerToChat()">注入 AI Chat →</button>
-          </div>
-        </div>
-
-        <!-- Awesome ChatGPT Prompts Library -->
-        <div class="sec"><div class="sec-id">§02</div><div class="sec-line"></div><div class="sec-label">Awesome Prompts · 163k ★ 精选库</div><div class="sec-line"></div>
-          <input id="prompt-search" style="font-family:var(--mono);font-size:9px;padding:5px 12px;background:transparent;border:0.5px solid var(--border-hi);color:var(--ink);outline:none;border-radius:var(--radius);width:180px" placeholder="搜索 prompt…" oninput="filterPromptLib(this.value)">
-        </div>
-        <div id="prompt-cat-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px"></div>
-        <div id="prompt-lib-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border-hi)"></div>
-
       </div>
     </div>
 
@@ -1333,13 +1361,49 @@ select.form-input{appearance:none;cursor:pointer;}
     </div>
   </div>
 
+  <!-- EDIT SUBJECT MODAL -->
+  <div class="edit-modal-overlay" id="edit-modal" onclick="if(event.target===this)closeEditSubject()">
+    <div class="edit-modal">
+      <div class="modal-tick tl"></div><div class="modal-tick br"></div>
+      <div style="font-family:var(--mono);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px">SUBJECT SETTINGS</div>
+      <div class="edit-modal-title">Edit <em>Subject</em></div>
+      <div class="modal-field">
+        <div class="modal-field-lbl">Subject Name · 科目名称</div>
+        <input class="modal-input" id="edit-name" placeholder="科目名称" maxlength="30"/>
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-lbl">Exam Date · 考试日期</div>
+        <input class="modal-input" id="edit-date" type="date" style="font-family:var(--mono);font-size:14px"/>
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-lbl">目标分数 · Target Score</div>
+        <input class="modal-input" id="edit-score" type="text" placeholder="e.g. 90 / A+ / Pass"/>
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-lbl">知识点范围 · Knowledge Scope <span style="font-size:10px;color:var(--ink-dim)">（一行一个，AI 对话将以此为约束边界）</span></div>
+        <textarea class="modal-input" id="edit-knowledge" rows="5" placeholder="例：&#10;第1章 极限与连续&#10;第2章 导数与微分&#10;第3章 不定积分&#10;向量空间与线性变换" style="font-size:13px;line-height:1.65;resize:vertical;font-family:var(--mono)"></textarea>
+      </div>
+      <div class="modal-field">
+        <div class="modal-field-lbl" style="display:flex;align-items:center;justify-content:space-between">
+          重点章节 · Key Sections
+          <button class="sec-btn" onclick="addEditSection()">+ 添加</button>
+        </div>
+        <div id="edit-sections-list" style="margin-top:8px"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeEditSubject()">Cancel</button>
+        <button class="modal-confirm" onclick="confirmEditSubject()">Save →</button>
+      </div>
+    </div>
+  </div>
+
   <!-- MOBILE NAV -->
   <div class="mobile-nav" id="mobile-nav">
     <div class="mobile-nav-item active" id="mnav-home" onclick="mobileNav('home')"><div class="mobile-nav-icon">📚</div><div class="mobile-nav-label">科目</div></div>
     <div class="mobile-nav-item" id="mnav-tasks" onclick="mobileNav('tasks')"><div class="mobile-nav-icon">📋</div><div class="mobile-nav-label">任务</div></div>
     <div class="mobile-nav-item" id="mnav-pomodoro" onclick="mobileNav('pomodoro')"><div class="mobile-nav-icon">🍅</div><div class="mobile-nav-label">番茄钟</div></div>
     <div class="mobile-nav-item" id="mnav-notes" onclick="mobileNav('notes')"><div class="mobile-nav-icon">📝</div><div class="mobile-nav-label">笔记</div></div>
-    <div class="mobile-nav-item" id="mnav-more" onclick="mobileNav('aichat')"><div class="mobile-nav-icon">💬</div><div class="mobile-nav-label">AI</div></div>
+    <div class="mobile-nav-item" id="mnav-more" onclick="mobileNav('ai')"><div class="mobile-nav-icon">🤖</div><div class="mobile-nav-label">AI</div></div>
   </div>
 </div>
 <script>
@@ -1428,9 +1492,8 @@ function openSubject(id){
   currentSubjectColor=s.color;
   switchTab('tasks',document.querySelector('.module-tab[data-tab="tasks"]'));
   renderTasks(); renderPomoTasks(); renderStats();
-  renderNotes(); renderExamHeader(); renderExamSections();
-  renderFlashCards(); renderErrors(); renderResources();
-  populatePlanExamSel();
+  renderNotes(); renderFlashCards(); renderErrors(); renderResources();
+  renderPlanner();
   if(pomoRunning&&currentPage!=='pomodoro') document.getElementById('pomo-pip').classList.add('visible');
 }
 
@@ -1441,8 +1504,8 @@ function switchTab(tab,el){
   document.getElementById('panel-'+tab).classList.add('active');
   currentPage=tab;
   if(tab==='pomodoro'){resizePomo();startArt();}
-  if(tab==='planner'){renderPlanner();}
-  if(tab==='aichat'){renderAIChatSidebar();renderAIProviderLabel();}
+  if(tab==='tasks'){renderPlanner();}
+  if(tab==='ai'){renderAIChatSidebar();renderAIProviderLabel();}
   setMobileNav(tab);
   // PIP visibility
   if(tab==='pomodoro') document.getElementById('pomo-pip').classList.remove('visible');
@@ -1637,7 +1700,6 @@ function renderPlanner(){
   renderPlannerExamTimeline();
   renderMiniCal();
   renderCalFilterChips();
-  populatePlanExamSel();
   renderPlanCols();
 }
 
@@ -1751,98 +1813,99 @@ function renderPlanCols(){
     </div>`).join('');
 }
 
-// AI Plan generation
-function populatePlanExamSel(){
-  const sel=document.getElementById('plan-exam-sel'); if(!sel) return;
-  const upcoming=subjects.filter(s=>s.examDate&&daysUntil(s.examDate)>=0).sort((a,b)=>daysUntil(a.examDate)-daysUntil(b.examDate));
-  sel.innerHTML=`<option value="">选择考试…</option>`+upcoming.map(s=>`<option value="${s.id}">${s.name} (${daysUntil(s.examDate)}天后)</option>`).join('');
-}
-
-async function generateAIPlan(){
-  const sid=document.getElementById('plan-exam-sel').value;
-  if(!sid){toast('请先选择一个考试','error');return;}
-  const s=getSubject(sid); if(!s) return;
-  const d=daysUntil(s.examDate);
-  const hrs=document.getElementById('plan-hours').value||3;
-  const strat=document.getElementById('plan-strategy').value;
-  const resultEl=document.getElementById('plan-result');
-  const btn=document.getElementById('plan-gen-btn');
-  btn.textContent='生成中…';btn.disabled=true;
-  resultEl.innerHTML='<span style="font-family:var(--mono);font-size:9px;color:var(--ink-dim)">AI 规划中…</span>';
-  resultEl.classList.remove('active');
-  const stratMap={
-    balanced:'均衡推进——新知识学习60%与间隔复习40%，利用艾宾浩斯遗忘曲线在记忆消退前强化',
-    front:'前期冲刺——前2/3时间攻克难点，后1/3集中做题模拟，适合基础薄弱需大量输入的情况',
-    back:'考前集中——前期梳理框架，最后7天高强度刷题+错题复盘，适合基础尚可需提升应试能力的情况'
-  };
-  const phase1End=Math.floor(d*0.45),phase2End=Math.floor(d*0.75);
-  const prompt=`你是大学/研究生备考规划专家，精通艾宾浩斯遗忘曲线和费曼学习法。
-
-【学情信息】
-科目：${s.name}
-考试日期：${s.examDate}，距今 ${d} 天
-每日可用学习时间：${hrs} 小时
-策略：${stratMap[strat]}
-
-【规划原则】
-1. 艾宾浩斯间隔复习：新知识在学后第1/3/7/14天安排复习节点
-2. 费曼输出验证：每个模块学完安排一次不看材料、用自己的话复述的任务
-3. 苏格拉底自测：每阶段末用追问检验是否真正理解，而不只是记住
-4. 任务粒度：每个任务在 ${Math.min(Math.round(hrs*60/3),90)} 分钟内完成（一个番茄钟可覆盖）
-
-【输出格式】先输出中文计划描述：
-
-**阶段一：基础构建期**（第1天 — 第${phase1End}天）
-[目标 + 每天大致安排，说明哪些内容优先及原因]
-
-**阶段二：深化巩固期**（第${phase1End+1}天 — 第${phase2End}天）
-[目标 + 费曼输出和间隔复习节点]
-
-**阶段三：冲刺应试期**（第${phase2End+1}天 — 考前）
-[高强度刷题 + 错题清单 + 最终模拟安排]
-
-**关键里程碑：**
-- [ ] 第${Math.floor(d*0.2)}天：完成知识框架梳理
-- [ ] 第${Math.floor(d*0.5)}天：完成第一轮费曼复述
-- [ ] 第${Math.floor(d*0.8)}天：完成全套模拟题
-- [ ] 考前1天：只复习错题本，禁止学新内容
-
-最后输出JSON任务列表（仅JSON，格式严格如下）：
-[{"text":"任务描述（15字以内）","level":"month|week|day","priority":"critical|normal|easy"}]
-
-要求：month任务3个以上（阶段目标），week任务5个以上（周行动），day任务4个以上（今日可执行），priority合理分配。`;
-  try{
-    const text=await callAI(prompt);
-    const jsonMatch=text.match(/\[[\s\S]*?\]/);
-    if(jsonMatch){
-      try{
-        generatedPlanTasks=JSON.parse(jsonMatch[0]).map(t=>({...t,id:uid(),done:false,subjectId:sid,createdAt:today()}));
-        document.getElementById('plan-inject-btn').style.display='';
-      }catch(e){}
-    }
-    resultEl.innerHTML=text.replace(/\[[\s\S]*?\]/,'').trim().replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')||text;
-    resultEl.classList.add('active');
-    toast('复习计划已生成','success');
-  }catch(e){
-    resultEl.innerHTML=`<span style="color:var(--red);font-family:var(--mono);font-size:9px">错误：${e.message}</span>`;
+// ── TASKS VIEW TOGGLE (mobile) ──
+let currentTasksView='list';
+function switchTasksView(v){
+  currentTasksView=v;
+  document.getElementById('tvbtn-list').classList.toggle('active',v==='list');
+  document.getElementById('tvbtn-cal').classList.toggle('active',v==='cal');
+  const listCol=document.getElementById('tasks-list-col');
+  const calCol=document.getElementById('tasks-cal-col');
+  if(window.innerWidth<=768){
+    listCol.style.display=v==='list'?'block':'none';
+    calCol.style.display=v==='cal'?'block':'none';
+  } else {
+    listCol.style.display='';calCol.style.display='';
   }
-  btn.textContent='AI 生成 →';btn.disabled=false;
+}
+window.addEventListener('resize',()=>{if(currentTasksView)switchTasksView(currentTasksView);});
+
+// ── FLASH CARDS SUB-TAB ──
+let currentFCTab='concept';
+function switchFCTab(tab,el){
+  currentFCTab=tab;
+  document.querySelectorAll('.fc-subtab').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('fc-panel-concept').style.display=tab==='concept'?'block':'none';
+  document.getElementById('fc-panel-error').style.display=tab==='error'?'block':'none';
+  if(tab==='concept') renderFlashCards();
+  else renderErrors();
 }
 
-function injectPlanToTasks(){
-  if(!generatedPlanTasks.length) return;
-  const tasks=loadTasks();
-  tasks.push(...generatedPlanTasks);
-  saveTasks(tasks);
-  renderTasks(); renderPomoTasks(); renderPlanCols();
-  toast(`已注入 ${generatedPlanTasks.length} 个复习任务`,'success');
-  document.getElementById('plan-inject-btn').style.display='none';
-  generatedPlanTasks=[];
+// ── AI INTERNAL NAV ──
+function switchAINav(tab,el){
+  document.querySelectorAll('.ai-nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.ai-sub-panel').forEach(p=>p.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('ai-sub-'+tab).classList.add('active');
+  if(tab==='chat'){renderAIChatSidebar();renderAIProviderLabel();}
 }
 
-// ── POMODORO (v3 original + Web Worker + PIP) ──
+// ── EDIT SUBJECT MODAL ──
+let editSections=[];
+function openEditSubject(){
+  const s=getSubject(currentSubjectId); if(!s) return;
+  document.getElementById('edit-name').value=s.name||'';
+  document.getElementById('edit-date').value=s.examDate||'';
+  document.getElementById('edit-score').value=s.targetScore||'';
+  document.getElementById('edit-knowledge').value=s.knowledgePoints||'';
+  editSections=JSON.parse(JSON.stringify(s.sections||[]));
+  renderEditSections();
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeEditSubject(){document.getElementById('edit-modal').classList.remove('open');}
+function renderEditSections(){
+  const el=document.getElementById('edit-sections-list');
+  if(!editSections.length){el.innerHTML=`<div style="font-family:var(--mono);font-size:9px;color:var(--ink-dim);padding:8px 0">暂无章节 — 点击 + 添加</div>`;return;}
+  el.innerHTML=editSections.map((sec,i)=>`
+    <div class="edit-section-row">
+      <div class="edit-section-name">${sec.name}</div>
+      <span class="edit-section-priority ${sec.priority}">${sec.priority}</span>
+      <button class="task-del" onclick="removeEditSection(${i})">×</button>
+    </div>`).join('');
+}
+function addEditSection(){
+  const name=prompt('章节名称 / Section name:');if(!name)return;
+  const priority=prompt('重要程度 / Priority: high / mid / low','high')||'mid';
+  const weight=prompt('占比 / Weight (e.g. 30%):')||'—';
+  editSections.push({id:'sec_'+Date.now(),name,priority,weight});
+  renderEditSections();
+}
+function removeEditSection(i){editSections.splice(i,1);renderEditSections();}
+function confirmEditSubject(){
+  const s=getSubject(currentSubjectId); if(!s) return;
+  s.name=document.getElementById('edit-name').value.trim()||s.name;
+  s.examDate=document.getElementById('edit-date').value||s.examDate;
+  s.targetScore=document.getElementById('edit-score').value.trim();
+  s.knowledgePoints=document.getElementById('edit-knowledge').value.trim();
+  s.sections=editSections;
+  saveSubjects();
+  // Refresh header
+  document.getElementById('detail-name').innerHTML=s.name;
+  const d=daysUntil(s.examDate);
+  const dBadge=document.getElementById('detail-days');
+  dBadge.textContent=d===null?'—':d<0?'Past':d===0?'Today!':d+' days';
+  dBadge.className='days-badge'+(d!==null&&d<=7?' urgent':'');
+  closeEditSubject();
+  toast('设置已保存','success');
+}
+
+// AI plan generation is removed (per design decision)
+
+// ── POMODORO (v3 original + Web Worker + PIP + timestamp fix) ──
 let pomoRunning=false,pomoMode='focus',pomoRemaining=25*60,pomoTotal=25*60;
 let pomoInterval=null,pomoSessions=0,currentSubjectColor='#0047ab';
+let pomoStartTimestamp=null,pomoRemainingAtStart=25*60; // timestamp-based calibration
 const POMO_DURATIONS={focus:25,short:5,long:15};
 let artRunning=false,artMode='contour',artT=0,artRaf=null;
 let pomoCanvas=null,pomoCtx=null,pomoW=0,pomoH=0;
@@ -1915,16 +1978,31 @@ function renderDots(){
 }
 
 function tickPomo(){
-  if(pomoRemaining>0){pomoRemaining--;updatePomoDisplay();}
-  else{pomoRunning=false;if(pomoWorker)pomoWorker.postMessage('stop');document.getElementById('pomo-play-btn').textContent='▶';document.getElementById('pip-play-btn').textContent='▶';onPomoEnd();}
+  // Timestamp-based: derive remaining from real elapsed time (robust against throttling)
+  if(pomoStartTimestamp!==null){
+    const elapsed=Math.floor((Date.now()-pomoStartTimestamp)/1000);
+    pomoRemaining=Math.max(0,pomoRemainingAtStart-elapsed);
+  }
+  if(pomoRemaining>0){updatePomoDisplay();}
+  else{pomoRunning=false;pomoStartTimestamp=null;if(pomoWorker)pomoWorker.postMessage('stop');document.getElementById('pomo-play-btn').textContent='▶';document.getElementById('pip-play-btn').textContent='▶';onPomoEnd();}
 }
 
 function togglePomo(){
   if(pomoRunning){
+    // Pause: save remaining at this moment, clear timestamp
+    if(pomoStartTimestamp!==null){
+      const elapsed=Math.floor((Date.now()-pomoStartTimestamp)/1000);
+      pomoRemaining=Math.max(0,pomoRemainingAtStart-elapsed);
+    }
+    pomoRemainingAtStart=pomoRemaining;
+    pomoStartTimestamp=null;
     pomoRunning=false;if(pomoWorker)pomoWorker.postMessage('stop');
     document.getElementById('pomo-play-btn').textContent='▶';
     document.getElementById('pip-play-btn').textContent='▶';
   } else {
+    // Start: record timestamp and current remaining
+    pomoStartTimestamp=Date.now();
+    pomoRemainingAtStart=pomoRemaining;
     pomoRunning=true;if(pomoWorker)pomoWorker.postMessage('start');
     document.getElementById('pomo-play-btn').textContent='⏸';
     document.getElementById('pip-play-btn').textContent='⏸';
@@ -1948,9 +2026,10 @@ function onPomoEnd(){
 
 function resetPomo(){
   pomoRunning=false;if(pomoWorker)pomoWorker.postMessage('stop');
+  pomoStartTimestamp=null;
   document.getElementById('pomo-play-btn').textContent='▶';
   document.getElementById('pip-play-btn').textContent='▶';
-  pomoRemaining=POMO_DURATIONS[pomoMode]*60;pomoTotal=pomoRemaining;
+  pomoRemaining=POMO_DURATIONS[pomoMode]*60;pomoTotal=pomoRemaining;pomoRemainingAtStart=pomoRemaining;
   updatePomoDisplay();
   document.getElementById('pomo-pip').classList.remove('visible');
 }
@@ -1958,8 +2037,9 @@ function skipPomo(){resetPomo();}
 
 function setPomoMode(mode,el){
   pomoMode=mode;pomoRunning=false;if(pomoWorker)pomoWorker.postMessage('stop');
+  pomoStartTimestamp=null;
   document.getElementById('pomo-play-btn').textContent='▶';
-  pomoRemaining=POMO_DURATIONS[mode]*60;pomoTotal=pomoRemaining;
+  pomoRemaining=POMO_DURATIONS[mode]*60;pomoTotal=pomoRemaining;pomoRemainingAtStart=pomoRemaining;
   document.querySelectorAll('.pomo-mode-pill').forEach(p=>p.classList.remove('active'));
   if(el) el.classList.add('active');
   updatePomoDisplay();
@@ -2179,21 +2259,20 @@ function sendNoteToAIChat(){
   if(!currentNoteId)return;
   const n=loadNotes().find(n=>n.id===currentNoteId);if(!n||!n.content)return toast('笔记为空','error');
   const preview=n.content.replace(/<[^>]+>/g,'').slice(0,400);
-  switchTab('aichat',document.querySelector('[data-tab="aichat"]'));
-  setAICtx('notes',document.querySelector('.ai-ctx-chip[data-ctx="notes"]'));
+  switchTab('ai',document.querySelector('[data-tab="ai"]'));
+  setAICtx('subject',document.querySelector('.ai-ctx-chip[data-ctx="subject"]'));
   if(!currentAISessionId) newAISession();
   const inp=document.getElementById('ai-input');
-  inp.value=`请总结这篇笔记的重点：\n\n${preview}${n.content.length>400?'…':''}`;
+  inp.value=`请结合我的笔记内容总结重点：\n\n${preview}${n.content.length>400?'…':''}`;
   autoResizeAI(inp);
 }
 
 // ── AI CHAT (v4) ──
 let currentAISessionId=null,aiCtx='general',aiIsTyping=false;
 const AI_QUICK={
-  general:['解释这个概念','出一道练习题','帮我理解这个公式'],
-  subject:['这门课的重点是什么？','给我一个学习路线','常见考点有哪些？'],
-  notes:['总结重点','找出知识漏洞','整理成大纲'],
-  plan:['从哪里开始复习？','帮我制定今日计划','分析我的进度'],
+  general:['解释这个概念','出一道练习题','帮我理解这个公式','给我一个学习建议'],
+  subject:['这门课的核心知识点是什么？','根据我的错题分析我的薄弱点','帮我用费曼法解释一个概念','结合我的笔记出一道测试题'],
+  plan:['根据我的进度制定今日计划','分析哪门课最需要关注','帮我设计一个本周复习安排'],
 };
 
 function loadAISessions(){return load('ai_sessions',[]);}
@@ -2202,7 +2281,14 @@ function saveAISessions(s){save('ai_sessions',s);}
 function renderAIChatSidebar(){
   const sessions=loadAISessions();
   const el=document.getElementById('ai-session-list');
-  el.innerHTML=sessions.map(s=>`<div class="ai-session-item ${s.id===currentAISessionId?'active':''}" onclick="openAISession('${s.id}')"><div class="ai-session-title">${s.title||'新对话'}</div><div class="ai-session-meta">${s.messages.length}条 · ${s.date||''}</div></div>`).join('')||`<div style="padding:14px;font-family:var(--mono);font-size:9px;color:var(--ink-dim)">暂无历史</div>`;
+  el.innerHTML=sessions.map(s=>`
+    <div class="ai-session-item ${s.id===currentAISessionId?'active':''}" onclick="openAISession('${s.id}')">
+      <div class="ai-session-content">
+        <div class="ai-session-title">${s.title||'新对话'}</div>
+        <div class="ai-session-meta">${s.messages.length}条 · ${s.date||''}</div>
+      </div>
+      <button class="ai-session-del" onclick="event.stopPropagation();deleteAISession('${s.id}')" title="删除">×</button>
+    </div>`).join('')||`<div style="padding:14px;font-family:var(--mono);font-size:9px;color:var(--ink-dim)">暂无历史</div>`;
   renderAIQuickBtns();
 }
 function newAISession(){
@@ -2212,6 +2298,16 @@ function newAISession(){
   currentAISessionId=s.id;
   renderAIChatSidebar();
   renderAIMessages([]);
+}
+function deleteAISession(id){
+  if(!confirm('删除这条对话记录？')) return;
+  const sessions=loadAISessions().filter(s=>s.id!==id);
+  saveAISessions(sessions);
+  if(currentAISessionId===id){
+    currentAISessionId=null;
+    renderAIMessages([]);
+  }
+  renderAIChatSidebar();
 }
 function openAISession(id){
   currentAISessionId=id;
@@ -2275,6 +2371,25 @@ async function sendAIMsg(){
   }
   aiIsTyping=false;document.getElementById('ai-send-btn').disabled=false;
 }
+// ── BUILD SUBJECT KNOWLEDGE BASE (NotebookLM-style) ──
+function buildSubjectKnowledgeBase(){
+  if(!currentSubjectId) return '';
+  const s=getSubject(currentSubjectId); if(!s) return '';
+  const parts=[];
+  if(s.targetScore) parts.push(`【目标分数】${s.targetScore}`);
+  if(s.knowledgePoints&&s.knowledgePoints.trim())
+    parts.push(`【知识点范围 — AI回答须以此为约束边界】\n${s.knowledgePoints.trim()}`);
+  if(s.sections&&s.sections.length)
+    parts.push(`【重点章节】${s.sections.map(x=>`${x.name}（${x.priority}，${x.weight||'—'}）`).join('、')}`);
+  const notes=load('notes_'+currentSubjectId,[]).slice(0,3);
+  if(notes.length) parts.push(`【笔记摘要（${notes.length}篇）】\n${notes.map(n=>`《${n.title}》：${(n.content||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').slice(0,300)}`).join('\n')}`);
+  const cards=load('cards_'+currentSubjectId,[]).slice(0,10);
+  if(cards.length) parts.push(`【知识点卡片（${cards.length}张）】\n${cards.map(c=>`· ${c.front} → ${(c.back||'').slice(0,80)}`).join('\n')}`);
+  const errors=load('errors_'+currentSubjectId,[]).slice(0,5);
+  if(errors.length) parts.push(`【近期错题（${errors.length}条）】\n${errors.map(e=>`· ${e.question.slice(0,80)}${e.correct?' ✓ '+e.correct.slice(0,60):''}`).join('\n')}`);
+  return parts.length?'\n\n---\n【学科知识库 · 请依据以下内容辅助作答，引用时注明来源如"根据你的笔记《XX》"】\n'+parts.join('\n\n'):'';
+}
+
 function buildAIChatSystem(session){
   const s=currentSubjectId?getSubject(currentSubjectId):null;
   const sName=s?s.name:'未指定科目';
@@ -2285,40 +2400,21 @@ function buildAIChatSystem(session){
 2. 苏格拉底式追问：不直接给答案，先提引导性问题让学生自己思考；用追问检验理解深度；
 3. 艾宾浩斯强化：在合适时机主动提示复习节点，建议学生在1/3/7/14天后回顾关键概念。
 回答规范：默认中文，专业术语首次附英文；结构清晰不过度格式化；每次回答结尾视情况附一个苏格拉底追问或费曼检验题。`;
-  if(aiCtx==='general') return BASE+`
-
-【自由问答模式】先判断学生是在寻求概念理解、解题方法还是学习策略，针对性调整回答深度。若问题宽泛，先问清真实困惑点再作答。`;
+  if(aiCtx==='general') return BASE+`\n\n【自由问答模式】先判断学生是在寻求概念理解、解题方法还是学习策略，针对性调整回答深度。若问题宽泛，先问清真实困惑点再作答。`;
   if(aiCtx==='subject'&&s){
     const sess=Object.values(load('pomo_stats_'+currentSubjectId,{})).reduce((a,b)=>a+b,0);
     const done=loadTasks().filter(t=>t.done).length,todo=loadTasks().filter(t=>!t.done).length;
-    const secs=loadExamSections().map(x=>x.name).join('、')||'未设置';
-    return BASE+`
-
-【科目辅导：${sName}】${eCtx}已专注约 ${sess*25} 分钟，任务完成 ${done}/${done+todo}，重点章节：${secs}。
-角色：该科目助教。解题时先问学生卡在哪步，用费曼法引导推导；讲概念时先给生活类比再给正式定义再给一个反例；遇基础漏洞先从根源修复；高频考点主动标注。`;
-  }
-  if(aiCtx==='notes'){
-    const notes=loadNotes();
-    const cn=notes.find(n=>n.id===currentNoteId)||notes[0];
-    const nc=cn?cn.content.replace(/<[^>]+>/g,'').slice(0,500):'';
-    const ntitle=cn?cn.title:'无';
-    return BASE+`
-
-【笔记问答】当前笔记：《${ntitle}》
-摘要：${nc}
-
-角色：苏格拉底式导读者。总结时提炼3-5个核心论点+费曼类比；查漏洞时指出逻辑断层和缺失前置概念；整理大纲时按"核心概念→支撑论点→应用场景"三层结构重组笔记内容。`;
+    const kb=buildSubjectKnowledgeBase();
+    return BASE+`\n\n【科目知识库：${sName}】${eCtx}已专注约 ${sess*25} 分钟，任务完成 ${done}/${done+todo}。
+角色：该科目的个人学习助理。⚠️ 如果设定了知识点范围，优先围绕范围内内容作答，不主动延伸到范围外。回答时尽量引用知识库中的具体内容（笔记、错题、卡片），体现出针对你个人学习情况的个性化回答。${kb}`;
   }
   if(aiCtx==='plan'){
-    const exams=subjects.filter(x=>x.examDate&&daysUntil(x.examDate)>=0).sort((a,b)=>daysUntil(a.examDate)-daysUntil(b.examDate)).slice(0,4).map(x=>`${x.name}（${daysUntil(x.examDate)}天后）`).join('；');
+    const exams=subjects.filter(x=>x.examDate&&daysUntil(x.examDate)>=0).sort((a,b)=>daysUntil(a.examDate)-daysUntil(b.examDate)).slice(0,4).map(x=>`${x.name}（${daysUntil(x.examDate)}天后${x.targetScore?'，目标'+x.targetScore:''}）`).join('；');
     const pending=subjects.reduce((sum,x)=>sum+load('tasks_'+x.id,[]).filter(t=>!t.done).length,0);
     const totalMins=Math.round(subjects.reduce((sum,x)=>sum+Object.values(load('pomo_stats_'+x.id,{})).reduce((a,b)=>a+b,0),0)*25/60*10)/10;
-    return BASE+`
-
-【学习规划模式】即将考试：${exams||'暂无'}；待完成任务：${pending}条；累计专注：${totalMins}小时。
-角色：规划教练，使用艾宾浩斯遗忘曲线+GTD。制定计划时拆解到90分钟内可执行的粒度；分析进度时识别投入不足科目和拖延任务；时间紧张时用"只能做一件事"框架聚焦；主动标注倒计时不足14天的高风险科目。`;
+    return BASE+`\n\n【学习规划模式】即将考试：${exams||'暂无'}；待完成任务：${pending}条；累计专注：${totalMins}小时。
+角色：规划教练，使用艾宾浩斯遗忘曲线+GTD。制定计划时拆解到90分钟内可执行粒度；时间紧张时用"只能做一件事"框架聚焦；主动标注倒计时不足14天的高风险科目。`;
   }
-  // Check if Ranedeer system was injected for this session
   if(session&&session.ranedeerSystem) return session.ranedeerSystem;
   return BASE;
 }
@@ -2574,23 +2670,13 @@ async function runAiPrediction(){
   catch(e){out.innerHTML=`<span class="ai-output-placeholder" style="color:var(--red)">错误：${e.message}</span>`;}
   btn.textContent='Generate →';btn.classList.remove('running');btn.disabled=false;
 }
-function loadExamSections(){return load('exam_sections_'+currentSubjectId,[]);}
-function saveExamSections(s){save('exam_sections_'+currentSubjectId,s);}
-function renderExamHeader(){
-  const s=getSubject(currentSubjectId);const d=daysUntil(s.examDate);
-  const sessions=Object.values(load('pomo_stats_'+currentSubjectId,{})).reduce((a,b)=>a+b,0);
-  document.getElementById('exam-header').innerHTML=`
-    <div class="exam-stat-card"><div class="exam-stat-lbl">Exam Date</div><div class="exam-stat-val">${s.examDate?fmtDate(s.examDate):'—'}</div><div class="exam-stat-sub">target date</div></div>
-    <div class="exam-stat-card"><div class="exam-stat-lbl">Days Remaining</div><div class="exam-stat-val k">${d===null?'—':d<0?'Past':d}</div><div class="exam-stat-sub">${d!==null&&d>=0?'days left':'exam passed'}</div></div>
-    <div class="exam-stat-card"><div class="exam-stat-lbl">Total Sessions</div><div class="exam-stat-val">${sessions}</div><div class="exam-stat-sub">pomodoro sessions</div></div>`;
+// loadExamSections now reads from subject.sections (set via Edit Subject modal)
+function loadExamSections(){
+  const s=getSubject(currentSubjectId);
+  return (s&&s.sections)||load('exam_sections_'+currentSubjectId,[]); // fallback for legacy data
 }
-function addExamSection(){const name=prompt('Section name:');if(!name)return;const weight=prompt('Weight (e.g. 30%):');const priority=prompt('Priority: high / mid / low','high');const sections=loadExamSections();sections.push({id:'sec_'+Date.now(),name,weight:weight||'—',priority:priority||'mid'});saveExamSections(sections);renderExamSections();}
-function renderExamSections(){
-  const sections=loadExamSections(),el=document.getElementById('exam-sections');
-  if(!sections.length){el.innerHTML=`<div style="font-family:var(--mono);font-size:9px;color:var(--ink-dim);padding:12px 0">No sections — click + Add Section</div>`;return;}
-  el.innerHTML=sections.map((s,i)=>`<div class="exam-section-item"><div class="exam-section-num">${String(i+1).padStart(2,'0')}</div><div class="exam-section-name">${s.name}</div><div class="exam-section-weight">${s.weight}</div><div class="exam-tag ${s.priority==='high'?'exam-tag-hi':'exam-tag-mid'}">${s.priority}</div><button class="task-del" onclick="deleteExamSection('${s.id}')">×</button></div>`).join('');
-}
-function deleteExamSection(id){saveExamSections(loadExamSections().filter(s=>s.id!==id));renderExamSections();}
+function renderExamHeader(){} // Exam Intel panel removed; stats live in Pomodoro
+function renderExamSections(){} // sections now managed in Edit Subject modal
 
 // ── FLASHCARDS (v3 + rate) ──
 let fcIndex=0,fcFlipped=false;
@@ -2696,7 +2782,7 @@ function addCustomResource(){
 // ── MOBILE NAV ──
 function setMobileNav(tab){
   document.querySelectorAll('.mobile-nav-item').forEach(el=>el.classList.remove('active'));
-  const map={home:'mnav-home',tasks:'mnav-tasks',planner:'mnav-tasks',pomodoro:'mnav-pomodoro',notes:'mnav-notes',aichat:'mnav-more',exam:'mnav-more',flash:'mnav-more',errors:'mnav-more',resources:'mnav-more'};
+  const map={home:'mnav-home',tasks:'mnav-tasks',pomodoro:'mnav-pomodoro',notes:'mnav-notes',ai:'mnav-more',flash:'mnav-more',resources:'mnav-more'};
   const target=document.getElementById(map[tab]||'mnav-home');
   if(target) target.classList.add('active');
 }
@@ -2750,7 +2836,8 @@ function previewRanedeer(){
 }
 function sendRanedeerToChat(){
   const prompt = buildRanedeerPrompt();
-  switchTab('aichat', document.querySelector('[data-tab="aichat"]'));
+  switchTab('ai', document.querySelector('[data-tab="ai"]'));
+  switchAINav('chat', document.getElementById('ainav-chat'));
   if(!currentAISessionId) newAISession();
   const sessions = loadAISessions();
   const session = sessions.find(s=>s.id===currentAISessionId);
@@ -2759,7 +2846,6 @@ function sendRanedeerToChat(){
     session.ranedeerSystem = prompt;
     saveAISessions(sessions);
   }
-  // Inject as first assistant message to set context
   const inp = document.getElementById('ai-input');
   inp.value = '你好，请开始我们的学习会话。';
   autoResizeAI(inp);
